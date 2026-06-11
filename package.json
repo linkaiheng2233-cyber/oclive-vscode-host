@@ -1,0 +1,35 @@
+{
+  "name": "@oclive/vscode-host",
+  "version": "0.1.0",
+  "description": "OCLive VS Code host API contract — types and resolveOcliveHost() for penetration plugins",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linkaiheng2233-cyber/oclive-vscode-host.git"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p ./",
+    "test": "npm run build && node --test dist/resolveHost.test.js",
+    "prepublishOnly": "npm run test"
+  },
+  "peerDependencies": {
+    "@types/vscode": "^1.85.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
