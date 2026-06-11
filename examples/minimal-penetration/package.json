@@ -1,0 +1,28 @@
+{
+  "name": "minimal-penetration",
+  "displayName": "Minimal Penetration (OCLive sample)",
+  "description": "Third-party sample: append chat turn whispers to notes/whisper.md",
+  "version": "0.0.1",
+  "publisher": "oclive-samples",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "extensionDependencies": ["oclive.oclive-vscode"],
+  "main": "./out/extension.js",
+  "contributes": {},
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "@oclive/vscode-host": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}

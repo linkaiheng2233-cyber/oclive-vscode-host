@@ -12,6 +12,15 @@ npm install @oclive/vscode-host
 
 开发期可 `file:../oclive-vscode-host` 链接姊妹仓。
 
+## npm 发布（维护者）
+
+1. 在 [npmjs.com](https://www.npmjs.com/) 创建 Automation token（`publish` 权限）
+2. GitHub 仓库 **Settings → Secrets → Actions** 添加 `NPM_TOKEN`
+3. 打 tag 并推送：`git tag v0.1.0 && git push origin v0.1.0`
+4. [`.github/workflows/release.yml`](.github/workflows/release.yml) 执行 `npm publish --access public`
+
+验证：`npm view @oclive/vscode-host version` → `0.1.0`
+
 ## 最小示例
 
 ```typescript

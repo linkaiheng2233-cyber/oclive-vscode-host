@@ -40,4 +40,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 ## F5
 
-将本目录作为独立扩展打开，或并入三仓 workspace；核心扩展须已激活。
+1. `npm install`（本地联调可将 `package.json` 中 `"@oclive/vscode-host": "file:../../../oclive-vscode-host"`）
+2. `npm run compile`
+3. 打开 [`oclive-vscode.code-workspace`](../../../oclive-vscode/oclive-vscode.code-workspace) 三仓工作区
+4. 本目录 **Run Extension**；核心 `oclive.oclive-vscode` 须已安装/同工作区 F5 激活
+5. 打开含 `roles/mumu` 的文件夹，聊一轮 → 检查 `notes/whisper.md` 追加一行
+
+完整脚手架：`package.json` · `src/extension.ts` · `tsconfig.json` · `.vscode/launch.json`。
