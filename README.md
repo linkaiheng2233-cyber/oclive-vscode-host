@@ -1,71 +1,51 @@
 # @oclive/vscode-host
 
-OCLive VS Code **宿主 API 契约**（v1）—— 类型、`HOST_API_VERSION` 与 `resolveOcliveHost()` 运行时。
+OCLive VS Code 扩展的 TypeScript Host API 契约：类型、`HOST_API_VERSION` 与 `resolveOcliveHost()`。它供可选的工作区伴随插件接入核心扩展，不是角色运行时或推理后端。
 
-第三方渗透插件或工作区扩展 **只依赖本 npm 包**，无需复制类型或硬编码扩展 ID。
+The source-linked Host API for OCLive VS Code extensions. The package version and Host API compatibility version are separate concepts.
 
-## 安装
+## 当前接入方式：源码依赖
+
+目前使用同级克隆和 `file:` 依赖接入；npm 对外发布另行安排。先构建本包，再安装依赖它的核心扩展或插件：
 
 ```bash
-npm install @oclive/vscode-host
+git clone https://github.com/linkaiheng2233-cyber/oclive-vscode-host.git
+cd oclive-vscode-host
+npm ci
+npm run build
+npm test
 ```
 
-开发期可 `file:../oclive-vscode-host` 链接姊妹仓。
+消费方的 `package.json` 使用源码链接：
 
-## npm 发布（维护者）
-
-1. 在 [npmjs.com](https://www.npmjs.com/) 创建 Automation token（`publish` 权限）
-2. GitHub 仓库 **Settings → Secrets → Actions** 添加 `NPM_TOKEN`
-3. 打 tag 并推送：`git tag v0.1.0 && git push origin v0.1.0`
-4. [`.github/workflows/release.yml`](.github/workflows/release.yml) 执行 `npm publish --access public`
-
-验证：`npm view @oclive/vscode-host version` → `0.1.0`
-
-## 最小示例
-
-```typescript
-import {
-  HOST_API_VERSION,
-  resolveOcliveHost,
-  type ChatTurnCompletedEvent,
-} from '@oclive/vscode-host';
-import * as vscode from 'vscode';
-
-export function activate(context: vscode.ExtensionContext): void {
-  const host = resolveOcliveHost();
-  if (!host) {
-    void vscode.window.showWarningMessage('请先安装 OCLive 核心扩展 (oclive.oclive-vscode)');
-    return;
+```json
+{
+  "dependencies": {
+    "@oclive/vscode-host": "file:../oclive-vscode-host"
   }
-  if (host.apiVersion !== HOST_API_VERSION) {
-    void vscode.window.showWarningMessage('OCLive 宿主 API 版本不匹配，请升级扩展');
-    return;
-  }
-
-  context.subscriptions.push(
-    host.onChatTurnCompleted((e: ChatTurnCompletedEvent) => {
-      console.log('turn completed', e.roleId, e.reply.slice(0, 40));
-    }),
-  );
 }
 ```
 
-## API 概览
+## 契约与示例
 
-| 成员 | 说明 |
-|------|------|
-| `onChatTurnCompleted` | 成功聊天回合后触发 |
-| `onKernelReady` | 内核 attach/spawn 就绪 |
-| `getEditorContext()` | 当前编辑器上下文快照 |
-| `getRolePackPath()` | 有效角色包目录 |
-| `getRecentTurn()` | 最近一轮 user/assistant |
-| `requestWorkspaceWrite()` | 白名单 + 授权写盘 |
-| `getKernelClient()` | `bridgeDispatch` 等薄封装 |
-| `registerChatToolbarAction()` | Chat 顶栏动态按钮 |
+- [公开 API 类型](src/api.ts)与[版本常量](src/constants.ts)是本仓源码入口。
+- [最小伴随插件示例](examples/minimal-penetration/README.md)展示如何消费 API。
+- [Host API 文档](https://github.com/linkaiheng2233-cyber/oclive-vscode/blob/master/docs/HOST_API_V1.md)解释核心扩展提供的事件、上下文、受授权写盘与工具栏扩展。
 
-完整说明见姊妹仓 `oclive-vscode/docs/HOST_API_V1.md`。
+本仓源码包为 `0.1.0`，当前 `HOST_API_VERSION = 1`。消费方需要检查核心扩展是否存在及其 API 兼容性；API 解析成功不代表推理后端已经就绪。
 
-## 版本
+## 相关仓库与反馈
 
-- npm `0.1.0` ↔ `HOST_API_VERSION = 1`
-- Breaking API → npm major + 文档同步
+[核心扩展](https://github.com/linkaiheng2233-cyber/oclive-vscode) · [官方日记／来信插件](https://github.com/linkaiheng2233-cyber/oclive-vscode-penetration) · [A.I.Live](https://github.com/linkaiheng2233-cyber/oclivenewnew)
+
+问题请提交 [Issue](https://github.com/linkaiheng2233-cyber/oclive-vscode-host/issues)。公开契约变更需要同步核心扩展和消费插件；包元数据见 [package.json](package.json)。
+
+
+<!-- Preserve previously published section bookmarks. -->
+<a id="安装"></a>
+<a id="npm-发布维护者"></a>
+<a id="最小示例"></a>
+<a id="api-概览"></a>
+<a id="版本"></a>
+
+旧版章节书签保留在此。[整理前的首页](https://github.com/linkaiheng2233-cyber/oclive-vscode-host/blob/da07589e69013b1d8b43937ce3bac5d5ae62638a/README.md)可用于查阅历史说明；现行入口以本页与所链文档为准。
